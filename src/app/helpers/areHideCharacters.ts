@@ -1,0 +1,1 @@
+export const areHideCharacters = (email: string) => !email.includes('*');
