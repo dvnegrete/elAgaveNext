@@ -24,7 +24,7 @@ export const postAPI = async (api: string, body: object) => {
     });
     if (res.status === 500) {
         return "Internal server Error"
-    }    
+    }
     return await res.json();
 }
 
@@ -38,6 +38,6 @@ export const putAPI = async (api: string, body: object) => {
     });
     if (res.status === 500) {
         return "Internal server Error"
-    }    
+    }
     return await res.json();
 }
