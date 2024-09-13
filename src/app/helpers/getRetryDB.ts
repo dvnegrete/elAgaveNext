@@ -12,7 +12,7 @@ type QueryResult<T> = T[] & RowDataPacket[];
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
-export async function getRetryDB(query: string, retries: number = 3, delayMs: number = 2000) {
+export async function getRetryDB(query: string, retries: number = 3, delayMs: number = 2500) {
     try {
         const [result] = await db.execute<QueryResult<Register>>(query);
         if (result.length > 0) {

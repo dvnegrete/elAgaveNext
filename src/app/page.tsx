@@ -33,7 +33,7 @@ export default function Home() {
       const API = `/api/verifyHouse/${numberHouse}`;
       const res = await getAPI(API);
       if (!res) {
-        setEmail('')
+        setEmail('');
         setMessage('Escribe el correo en el campo en verde, y presiona Registrar.')
       } else {
         setEmail(res.email);
@@ -43,7 +43,8 @@ export default function Home() {
       setShowInputMail(true);
       setShowLoader(false);
     } else {
-      setMessage('Numero de casa no valido')
+      setHouseNumber(0);
+      setMessage('Numero de casa no valido');
       setShowLoader(false);
     }
   }
@@ -109,7 +110,8 @@ export default function Home() {
           >
 
             <div className='flex justify-evenly items-center w-full py-5'>
-              <label htmlFor="houseNumber" className='pr-3'>Número de casa:</label>
+              <label htmlFor="houseNumber" className='pr-1 text-center'>Número de casa:</label> 
+              <span className='pr-3 text-xl'>{houseNumber > 0 && houseNumber <= totalHouse ? houseNumber : '' }</span>
               <input
                 className="rounded-md border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
                 type="number"
