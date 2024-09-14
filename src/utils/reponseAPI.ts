@@ -7,6 +7,13 @@ export const error400 = () => {
     );
 }
 
+export const error401 = () => {
+    return NextResponse.json(
+        { error: 'Not Authorized' },
+        { status: 401 }
+    );
+}
+
 export const error404 = () => {
     return NextResponse.json(
         { error: 'notFound' },

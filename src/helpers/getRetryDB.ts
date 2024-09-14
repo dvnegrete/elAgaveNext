@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
-import { db } from '@/app/database/mysql';
+import { db } from '@/database/mysql';
 import { RowDataPacket } from 'mysql2';
-import { hideEmail } from '@/app/helpers/hideEmail'
-import { error404, error500 } from '@/app/utils/reponseAPI';
+import { hideEmail } from '@/helpers/hideEmail'
+import { error404, error500 } from '@/utils/reponseAPI';
 
 interface Register {
     email: string;

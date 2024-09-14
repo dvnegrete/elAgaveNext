@@ -1,8 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { getAPI, putAPI, postAPI } from './service/fetchAPI';
-import { Loader } from '@/app/components/Loader/Loader';
+import { getAPI, putAPI, postAPI } from '../service/fetchAPI';
+import { Loader } from '@/components/Loader/Loader';
 
 export default function Home() {
   const [showInputMail, setShowInputMail] = useState(false);
@@ -89,14 +89,7 @@ export default function Home() {
 
   return (
     <div className='flex flex-col items-center justify-items-center min-h-screen m-8 pb-20 gap-16 sm:m-1 font-[family-name:var(--font-geist-sans)] text-pretty'>
-      <div className='text-center'>
-        <h1 className='mt-6 text-4xl font-bold text-gray-900 sm:text-5xl md:text-5xl dark:text-white'>
-          Condominio El Agave 1
-        </h1>
-        <p className='mt-6 text-3xl font-bold text-gray-900 sm:text-5xl md:text-4xl dark:text-white'>
-          Registro de correos electrónicos.
-        </p>
-      </div>
+      
 
       {
         showLoader ?

@@ -1,5 +1,5 @@
-import { error500 } from '@/app/utils/reponseAPI';
-import { getRetryDB } from '@/app/helpers/getRetryDB';
+import { error500 } from '@/utils/reponseAPI';
+import { getRetryDB } from '@/helpers/getRetryDB';
 
 interface Params {
     numberHouse: string;
@@ -11,6 +11,6 @@ export async function GET(request: Request, { params }: { params: Params }) {
         const query = `SELECT id, email FROM registers WHERE house = '${Number(numberHouse)}'`;
         return getRetryDB(query);
     } catch (error) {
-        error500(error)
+        return error500(error);
     }
 }
