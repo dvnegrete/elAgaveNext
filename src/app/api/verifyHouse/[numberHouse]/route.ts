@@ -8,7 +8,7 @@ interface Params {
 export async function GET(request: Request, { params }: { params: Params }) {
     try {
         const { numberHouse } = params;
-        const query = `SELECT id, email FROM registers WHERE house = '${Number(numberHouse)}'`;
+        const query = `SELECT id, email, phone FROM registers WHERE house = '${Number(numberHouse)}'`;
         return getRetryDB(query);
     } catch (error) {
         return error500(error);
