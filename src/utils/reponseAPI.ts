@@ -2,8 +2,15 @@ import { NextResponse } from "next/server";
 
 export const error400 = () => {
     return NextResponse.json(
-        { error: 'falta email y/o numero de casa' },
+        { error: '⛔ERROR❗ Verifica que TODA la información sea correcta.' },
         { status: 400 }
+    );
+}
+
+export const error401 = () => {
+    return NextResponse.json(
+        { error: 'Not Authorized' },
+        { status: 401 }
     );
 }
 
@@ -14,9 +21,10 @@ export const error404 = () => {
     );
 }
 
-export const error405 = () => {
+export const error405 = (type: string) => {
+    const error = type === "email" ? '⛔ERROR❗Formato incorrecto en el correo' : '⛔ERROR❗ Formato incorrecto en el número de WhatsApp';
     return NextResponse.json(
-        { error: 'Formato incorrecto en el correo' },
+        { error },
         { status: 405 }
     );
 }

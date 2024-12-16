@@ -1,11 +1,12 @@
 import { NextResponse } from 'next/server';
-import { db } from '@/app/database/mysql';
+import { db } from '@/database/mysql';
 import { RowDataPacket } from 'mysql2';
-import { hideEmail } from '@/app/helpers/hideEmail'
-import { error404, error500 } from '@/app/utils/reponseAPI';
+import { hideCharactersPhone, hideEmail } from '@/helpers/hideCharacters'
+import { error404, error500 } from '@/utils/reponseAPI';
 
 interface Register {
     email: string;
+    phone: string;
 }
 
 type QueryResult<T> = T[] & RowDataPacket[];
@@ -17,7 +18,8 @@ export async function getRetryDB(query: string, retries: number = 3, delayMs: nu
         const [result] = await db.execute<QueryResult<Register>>(query);
         if (result.length > 0) {
             const email = hideEmail(result[0].email);
-            return NextResponse.json({ email, id: result[0].id });
+            const phone = hideCharactersPhone(result[0].phone)
+            return NextResponse.json({ email, phone, id: result[0].id });
         } else {
             return error404();
         }

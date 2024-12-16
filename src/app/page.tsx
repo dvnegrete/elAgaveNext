@@ -1,16 +1,19 @@
 'use client';
 
-import { useState } from 'react';
-import { getAPI, putAPI, postAPI } from './service/fetchAPI';
-import { Loader } from '@/app/components/Loader/Loader';
+import { ChangeEvent, useState } from 'react';
+import { getAPI, putAPI, postAPI } from '../service/fetchAPI';
+import { Loader } from '@/components/Loader/Loader';
+import Swal from 'sweetalert2';
 
 export default function Home() {
-  const [showInputMail, setShowInputMail] = useState(false);
+  const [showForm, setShowForm] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
   const [registerDB, setRegisterDB] = useState(false);
   const [isError, setIsError] = useState(false);
-  const [email, setEmail] = useState('');
-  const [id, setId] = useState('');
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [id, setId] = useState("");
   const [houseNumber, setHouseNumber] = useState(0);
   const [message, setMessage] = useState('');
 
@@ -18,10 +21,11 @@ export default function Home() {
 
   const resetState = () => {
     setShowLoader(true);
-    setShowInputMail(false);
+    setShowForm(false);
     setRegisterDB(false);
     setIsError(false);
     setMessage("");
+    cleanedInputs();
   }
 
   const handleNumberHouseVerify = async () => {
@@ -34,18 +38,37 @@ export default function Home() {
       const res = await getAPI(API);
       if (!res) {
         setEmail('');
-        setMessage('Escribe el correo en el campo en verde, y presiona Registrar.')
+        setMessage('Registra tus datos de contacto en los campos en verde, y presiona en "Registrar" al terminar .')
+        setShowForm(true);
       } else {
         setEmail(res.email);
+        setPhone(res.phone)
         setId(res.id);
         setRegisterDB(true);
       }
-      setShowInputMail(true);
+
       setShowLoader(false);
     } else {
       setHouseNumber(0);
-      setMessage('Numero de casa no valido');
+      setMessage('⛔ Numero de casa no valido');
       setShowLoader(false);
+    }
+  }
+
+  const handleButton = () => {
+    if (!registerDB) {
+      handleRegister()
+    } else {
+      Swal.fire({
+        title: "Confirmar actualización.",
+        text: `¿Estas seguro de modificar los datos de contacto de la casa ${houseNumber}?`,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Si, quiero actualizar."
+      })
+        .then(res => res.isConfirmed ? handleRegister() : setShowForm(false))
     }
   }
 
@@ -53,34 +76,63 @@ export default function Home() {
     setShowLoader(true);
     const API = '/api/register';
 
-    const res = registerDB ? await putAPI(API, { email, id }) : await postAPI(API, { email, houseNumber });
+    const res = registerDB ? await putAPI(API, { name, email, phone, id }) : await postAPI(API, { name, email, phone, houseNumber });
     if (res.error) {
-      setMessage(res.error || 'Ocurrió un error');
+      setMessage(res.error || 'Ocurrió un error ⛔');
       setIsError(true);
     }
     if (res.result && res.result.affectedRows === 1) {
-      setMessage(`Registro exitoso para la casa ${houseNumber} con el correo: ${email} `);
-      setShowInputMail(false);
-      setRegisterDB(false)
+      setMessage(`✅ REGISTRO EXITOSO!🎉 Casa ${houseNumber} con el correo ${email}, y el número ${phone}. Si hay un error, ingresa nuevamente y modifica la información.`);
+      setShowForm(false);
+      setRegisterDB(false);
     }
-    setEmail('');
+    cleanedInputs();
     setShowLoader(false);
   };
 
-  const messageMail = (email: string) => {
+  const cleanedInputs = () => {
+    setEmail('');
+    setPhone('');
+    setName('');
+  }
+
+  const handlerPhone = (e: ChangeEvent<HTMLInputElement>) => {
+    const cleaned = e.target.value.replace(/\D/g, "");
+    setPhone(cleaned);
+  }
+
+  const messageMail = (email: string, phone: string) => {
     return registerDB && !isError ?
       (<>
         <p className='text-sm'>
-          Ya existe un correo registrado para la casa {houseNumber}:
+          ✅ Ya existe un registro para la casa {houseNumber}.
         </p>
-        <p className='text-xl text-green-600'> {email} </p>
-        <p className='text-red-800 text-xs'>
-          * Caracteres ocultos por seguridad.
+        <p className='text-sm'>
+          Correo electrónico:
         </p>
-        <p className='mt-5'>
-          Si necesitas modificarlo introduce el correo electrónico correcto y actualizalo a continuación:
+        <p className='text-xl text-green-600'>{email} </p>
+        <p className='text-sm'>
+          WhatsApp:
+        </p>
+        <p className='text-xl text-green-600'>{phone} </p>
+        <p className='text-red-500 text-xs'>
+          * Caracteres ocultos por seguridad 🚫.
         </p>
         <hr />
+        {showForm ?
+          (
+            <p className='mt-5'>
+              Introduce nuevamente TODA la información de la casa {houseNumber}. ⬇️
+            </p>
+          ) : (
+            <button
+              onClick={() => setShowForm(true)}
+              className="rounded-full border border-solid p-2 bg-yellow-400 text-slate-900 self-center"
+              type="button">
+              Modificar información
+            </button>
+          )
+        }
       </>)
       :
       (<></>);
@@ -88,15 +140,8 @@ export default function Home() {
 
 
   return (
-    <div className='flex flex-col items-center justify-items-center min-h-screen m-8 pb-20 gap-16 sm:m-1 font-[family-name:var(--font-geist-sans)] text-pretty'>
-      <div className='text-center'>
-        <h1 className='mt-6 text-4xl font-bold text-gray-900 sm:text-5xl md:text-5xl dark:text-white'>
-          Condominio El Agave 1
-        </h1>
-        <p className='mt-6 text-3xl font-bold text-gray-900 sm:text-5xl md:text-4xl dark:text-white'>
-          Registro de correos electrónicos.
-        </p>
-      </div>
+    <div className='flex flex-col items-center justify-items-center m-8 mt-2 pb-20 gap-16 sm:m-1 font-[family-name:var(--font-geist-sans)] text-pretty'>
+
 
       {
         showLoader ?
@@ -106,12 +151,12 @@ export default function Home() {
           :
 
           <main
-            className="flex flex-col place-content-center gap-4 md:w-9/12 sm:w-5/6 row-start-2 md:items-center sm:items-start bg-slate-900 p-10 rounded-md"
+            className="flex flex-col place-content-center gap-4 md:w-9/12 sm:w-5/6 row-start-2 md:items-center sm:items-start p-10 pt-3 rounded-md"
           >
 
             <div className='flex justify-evenly items-center w-full py-5'>
-              <label htmlFor="houseNumber" className='pr-1 text-center'>Número de casa:</label> 
-              <span className='pr-3 text-xl'>{houseNumber > 0 && houseNumber <= totalHouse ? houseNumber : '' }</span>
+              <label htmlFor="houseNumber" className='pr-1 text-center'>Número de casa:</label>
+              <span className='pr-3 text-xl'>{houseNumber > 0 && houseNumber <= totalHouse ? houseNumber : ''}</span>
               <input
                 className="rounded-md border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
                 type="number"
@@ -119,6 +164,7 @@ export default function Home() {
                 max={totalHouse}
                 min='1'
               />
+
 
             </div>
             <button
@@ -129,31 +175,50 @@ export default function Home() {
             </button>
             <hr />
             {
-              messageMail(email)
+              messageMail(email, phone)
             }
             {
-              showInputMail && !isError &&
+              showForm && !isError &&
               <form
-                className='text-center'                >
-                <label htmlFor="email" className='text-green-600'>Correo electrónico:</label>
+                className='text-center'>
+                <label htmlFor="name" className='text-green-300'>Nombre:</label>
+                <input
+                  type="email"
+                  id="name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  required
+                  className="rounded-md border-4 border-solid border-green-600 transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#cccccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
+                />
+                <label htmlFor="email" className='text-green-300'>Correo electrónico:</label>
                 <input
                   type="email"
                   id="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  onChange={(e => setEmail(e.target.value))}
                   required
-                  className="rounded-md border-4 border-solid border-green-800 transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#cccccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
+                  className="rounded-md border-4 border-solid border-green-600 transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#cccccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
+                />
+                <label htmlFor="whats" className='text-green-300'>WhatsApp:</label>
+                <input
+                  type="tel"
+                  id="whats"
+                  onChange={handlerPhone}
+                  required
+                  pattern="[0-9]{10}"
+                  placeholder='Numero a 10 digitos'
+                  maxLength={14}
+                  className="rounded-md border-4 border-solid border-green-600 transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#cccccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
                 />
                 <br /><br />
                 <button
-                  onClick={handleRegister}
+                  onClick={handleButton}
                   className="rounded-full border border-solid p-4 bg-slate-200 text-slate-950"
-                  type="submit">
-                  {registerDB ? 'Actualizar correo' : 'Registrar'}
+                  type="button">
+                  {registerDB ? 'Actualizar información' : 'Registrar'}
                 </button>
               </form>
             }
-            {message && <p className='text-yellow-500'>{message}</p>}
+            {message && <p className='text-yellow-400'>{message}</p>}
 
           </main>
       }
