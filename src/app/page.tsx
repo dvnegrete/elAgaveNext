@@ -38,7 +38,7 @@ export default function Home() {
       const res = await getAPI(API);
       if (!res) {
         setEmail('');
-        setMessage('Registra tus datos de contacto en los campos en verde, y presiona en "Registrar" al terminar .')
+        setMessage('Propietario: captura tus datos de contacto en los campos en verde, y presiona "Registrar" al terminar.')
         setShowForm(true);
       } else {
         setEmail(res.email);
