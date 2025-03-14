@@ -15,8 +15,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "El Agave 1",
-  description: "App para control de email por casa",
+  title: "El Agave",
+  description: "App para Condominio El Agave 1",
 };
 
 const imgAlt = "El Agave 1"
