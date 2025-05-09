@@ -2,7 +2,7 @@
 
 import { ChangeEvent, useState } from 'react';
 import { getAPI, putAPI, postAPI } from '../service/fetchAPI';
-import { Loader } from '@/components/Loader/Loader';
+import { Loader } from '@/components';
 import Swal from 'sweetalert2';
 
 export default function Home() {
@@ -141,7 +141,9 @@ export default function Home() {
 
   return (
     <div className='flex flex-col items-center justify-items-center m-8 mt-2 pb-20 gap-16 sm:m-1 font-[family-name:var(--font-geist-sans)] text-pretty'>
-
+      <p className='mt-6 text-xl font-bold text-gray-900 md:text-2xl dark:text-white'>
+        Registro de correos electrónicos y números de WhatsApp.
+      </p>
 
       {
         showLoader ?

@@ -16,10 +16,10 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "El Agave",
-  description: "App para Condominio El Agave 1",
+  description: "App para Condominio El Agave",
 };
 
-const imgAlt = "El Agave 1"
+const imgAlt = "El Agave logo";
 
 export default function RootLayout({
   children,
@@ -32,9 +32,17 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <div className='text-center'>
-          <div className="flex flex-col justify-center items-center md:flex-row md:justify-evenly p-5">
-            <h1 className='mt-6 text-3xl font-bold text-gray-900 md:text-4xl dark:text-white md:order-1'>
-              Condominio El Agave 1
+          <div className="flex flex-col justify-center items-center md:flex-row md:justify-evenly p-8">
+            <h1 className='flex items-center mt-6 text-3xl font-bold text-gray-900 md:text-4xl dark:text-white md:order-1'>
+              <span>Condominio El Agave</span>
+              <Image
+                className="md:mt-0 mx-2"
+                src="/images/logo_el_agave.png"
+                alt={imgAlt}
+                width={60}
+                height={60}
+
+              />
             </h1>
             <Image
               className="rounded-full mt-3 md:mt-0"
@@ -45,9 +53,7 @@ export default function RootLayout({
             />
           </div>
 
-          <p className='mt-6 text-xl font-bold text-gray-900 md:text-2xl dark:text-white'>
-            Registro de correos electrónicos y números de WhatsApp.
-          </p>
+
         </div>
         {children}
       </body>
