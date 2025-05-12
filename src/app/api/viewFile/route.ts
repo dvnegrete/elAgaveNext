@@ -3,6 +3,11 @@ import { getCloudStorageGcp } from '@/libs/CloudStorageGcp';
 
 export async function GET() {
     const response = await getCloudStorageGcp();
-    console.log('Server time:', new Date().toISOString());
-    return NextResponse.json(response);
+    return new NextResponse(JSON.stringify(response), {
+        status: 200,
+        headers: {
+            'Content-Type': 'application/json',
+            'Cache-Control': 'no-store',
+        },
+    });
 }
