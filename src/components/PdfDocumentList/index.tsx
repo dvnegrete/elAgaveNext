@@ -1,5 +1,5 @@
 import { capitalize } from "@/helpers/capitalizeFirstLetter";
-import { FileGCPStorage } from "@/types/FileGCPStorage";
+import { FileGCPStorage } from "@/types/FileGCPStorage.type";
 
 type PdfDocumentListProps = {
   files: FileGCPStorage[];
@@ -12,32 +12,39 @@ export const PdfDocumentList: React.FC<PdfDocumentListProps> = ({
   title,
   showIndex = true,
 }) => {
+
+  const handleViewPdf = async (fileName: string) => {
+    try {
+      const res = await fetch(`/api/viewFile?name=${encodeURIComponent(fileName)}`);
+      const data = await res.json();
+      data ? window.open(data, '_blank') : new Error('No se pudo obtener el archivo.');      
+    } catch (err) {
+      console.error('Error fetching signed URL', err);
+      alert('Hubo un problema con el archivo PDF.');
+    }
+  };
+
   return (
-    <section className="px-6 py-4 w-screen text-center">
-      {title && <h2 className="text-2xl font-semibold text-center mb-6">{title}</h2>}
-      <div className="flex flex-wrap justify-center items-center">
+    <section className="px-6 py-5 w-screen text-center">
+      {title && <h2 className="text-2xl font-semibold text-center mb-6 underline">{title}</h2>}
+      <ol className="flex flex-wrap justify-around items-center">
         {files.map((file, index) => (
-          <div
+          <li
             key={file.name}
-            className="w-full max-w-3xl p-4 mb-8 shadow rounded"
+            className="flex flex-wrap justify-center max-w-96 p-4 pr-15 mb-8 shadow rounded sm:justify-items-start"
           >
-            <h3 className="text-lg font-medium mb-2">
+            <span className="text-lg font-medium p-3">
               {showIndex ? `${index + 1}. - ` : ''}{capitalize(file.name)}
-            </h3>
+            </span>
             <button
-              onClick={() => window.open(file.url, '_blank')}
+              onClick={() => handleViewPdf(file.name)}
               className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded mb-4"
             >
-              Ver PDF en nueva pestaña
-            </button>
-            <iframe
-              src={file.url}
-              className="w-full h-[500px] border border-gray-300 rounded"
-              title={file.name}
-            />
-          </div>
+              Ver Documento
+            </button>           
+          </li>
         ))}
-      </div>
+      </ol>
     </section>
   )
 }

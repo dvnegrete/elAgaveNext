@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { Loader, PdfDocumentList } from "@/components";
-import { FileGCPStorage } from "@/types/FileGCPStorage";
+import { FileGCPStorage } from "@/types/FileGCPStorage.type";
 
 const isNumericDate = (value: string | undefined): boolean => {
     return /^\d{8}$/.test(value || '');
