@@ -8,7 +8,7 @@ export default function Login() {
 
     const handlerClick = async () => {
         const inputPass = document.getElementById('pass') as HTMLInputElement;
-        const pass = inputPass.value.trim();;
+        const pass = inputPass.value.trim();
         setShowMessage(false)
         if (pass !== undefined) {
             const API = `/api/login/${pass}`;
