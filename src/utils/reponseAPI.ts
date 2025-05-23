@@ -9,7 +9,7 @@ export const error400 = () => {
 
 export const error401 = () => {
     return NextResponse.json(
-        { error: 'Not Authorized' },
+        { error: '⛔ No Autorizado' },
         { status: 401 }
     );
 }
