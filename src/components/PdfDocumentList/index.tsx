@@ -1,5 +1,5 @@
 import { capitalize } from "@/helpers/capitalizeFirstLetter";
-import { FileGCPStorage } from "@/types/FileGCPStorage.type";
+import { FileGCPStorage } from "@/shared/types/FileGCPStorage.type";
 
 type PdfDocumentListProps = {
   files: FileGCPStorage[];
