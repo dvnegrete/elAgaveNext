@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import Image from "next/image";
+import { MainNav } from "@/components/shared/MainMenu";
 
 const geistSans = localFont({
   src: "../fonts/GeistVF.woff",
@@ -32,6 +33,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <div className='text-center'>
+          
+          <MainNav />
+
           <div className="flex flex-col justify-center items-center md:flex-row md:justify-evenly p-8">
             <h1 className='flex items-center mt-6 text-3xl font-bold text-gray-900 md:text-4xl dark:text-white md:order-1'>
               <span>Condominio El Agave</span>
@@ -53,9 +57,10 @@ export default function RootLayout({
             />
           </div>
 
-
         </div>
+
         {children}
+        
       </body>
     </html>
   );

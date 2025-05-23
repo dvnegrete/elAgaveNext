@@ -16,17 +16,17 @@ const parseDate = (ddMMyyyy: string): Date => {
     return new Date(`${year}-${month}-${day}`);
 };
 
-export default function Documents() {
+export default function MeetingMinutes() {
     const [showLoader, setShowLoader] = useState(true);
-    const [documents, setDocuments] = useState<FileGCPStorage[]>([]);
+    const [meeting, setMeeting] = useState<FileGCPStorage[]>([]);
 
     const assignFileType = (files: FileGCPStorage[]) => {
         const meeting: FileGCPStorage[] = [];
-        const documents: FileGCPStorage[] = [];
 
         files.forEach((file) => {
             const rawDate = file.metadata?.date;
-            !isNumericDate(rawDate) && documents.push(file);
+            isNumericDate(rawDate) &&
+                meeting.push(file) 
         });
 
         meeting.sort((a, b) => {
@@ -35,7 +35,7 @@ export default function Documents() {
             return dateB.getTime() - dateA.getTime(); // Descendente
         });
 
-        setDocuments(documents);
+        setMeeting(meeting);
         setShowLoader(false);
     }
 
@@ -53,7 +53,7 @@ export default function Documents() {
                     <Loader />
                     :
                     <>
-                        <PdfDocumentList files={documents} title="Documentos" />
+                        <PdfDocumentList files={meeting} title="Minutas y Convocatorias de asamblea." />
                     </>
             }
         </div>
