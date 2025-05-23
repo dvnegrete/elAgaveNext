@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import { Loader, PdfDocumentList } from "@/components";
 import { FileGCPStorage } from "@/shared/types/FileGCPStorage.type";
@@ -19,6 +20,7 @@ const parseDate = (ddMMyyyy: string): Date => {
 export default function Documents() {
     const [showLoader, setShowLoader] = useState(true);
     const [documents, setDocuments] = useState<FileGCPStorage[]>([]);
+    const router = useRouter();
 
     const assignFileType = (files: FileGCPStorage[]) => {
         const meeting: FileGCPStorage[] = [];
@@ -41,7 +43,13 @@ export default function Documents() {
 
     useEffect(() => {
         fetch('/api/viewFile')
-            .then(res => res.json())
+            .then(async res => {
+                if (res.status === 401) {
+                    router.push('/login');
+                    return [{name: '', metadata: { date: '' }}];
+                }
+                return res.json();
+            })
             .then(data => assignFileType(data));
     }, []);
 

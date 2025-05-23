@@ -17,7 +17,7 @@ export const PdfDocumentList: React.FC<PdfDocumentListProps> = ({
     try {
       const res = await fetch(`/api/viewFile?name=${encodeURIComponent(fileName)}`);
       const data = await res.json();
-      data ? window.open(data, '_blank') : new Error('No se pudo obtener el archivo.');      
+      data ? window.open(data, '_blank') : new Error('No se pudo obtener el archivo.');
     } catch (err) {
       console.error('Error fetching signed URL', err);
       alert('Hubo un problema con el archivo PDF.');
@@ -41,7 +41,7 @@ export const PdfDocumentList: React.FC<PdfDocumentListProps> = ({
               className="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded mb-4"
             >
               Ver Documento
-            </button>           
+            </button>
           </li>
         ))}
       </ol>
