@@ -25,6 +25,14 @@ export const postAPI = async (api: string, body: object) => {
     return await res.json();
 }
 
+export const postFormData = async (api: string, formData: FormData) => {
+    const res = await fetch(api, {
+        method: 'POST',
+        body: formData,
+    });
+    return await res.json();
+}
+
 export const putAPI = async (api: string, body: object) => {
     const res = await fetch(api, {
         method: 'PUT',
